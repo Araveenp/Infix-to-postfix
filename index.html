@@ -1,0 +1,123 @@
+<index.html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infix to Postfix Conversion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 1px;
+            background-color: #ADD8E6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #000000;
+        }
+       p1 {
+             text-align: center;
+             color: #FF0000;
+        }
+        form {
+            margin-top: 50px;
+            display: flex;
+            align-items: center;
+        }
+        label {
+            font-size: 15px;
+            margin-right: 10px;
+            color: #333;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 5px;
+            font-size: 16px;
+            border: 1.5px solid #00008B;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: 2px solid #008000;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #00ff00;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Infix to Postfix Conversion</h1>
+        <p1>Please enter the expression without any space !! </p1>
+        <form id="conversionForm">
+            <label for="infix">Enter Infix Expression:</label>
+            <input type="text" id="infix" name="infix" required>
+        </form>
+        <button type="button" onclick="convertToPostfix()">Convert</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        function precedence(op) {
+            if (op === '+' || op === '-') return 1;
+            if (op === '*' || op === '/') return 2;
+            if (op === '^') return 3;
+            return 0;
+        }
+
+        function isOperator(c) {
+            return ['+', '-', '*', '/', '^'].includes(c);
+        }
+
+        function convertToPostfix() {
+            const infix = document.getElementById('infix').value;
+            let stack = [];
+            let postfix = '';
+            for (let i = 0; i < infix.length; i++) {
+                const char = infix[i];
+
+                if (char.match(/[a-z0-9]/i)) {
+                    postfix += char;
+                } else if (char === '(') {
+                    stack.push(char);
+                } else if (char === ')') {
+                    while (stack.length && stack[stack.length - 1] !== '(') {
+                        postfix += stack.pop();
+                    }
+                    stack.pop();
+                } else if (isOperator(char)) {
+                    while (stack.length && precedence(stack[stack.length - 1]) >= precedence(char)) {
+                        postfix += stack.pop();
+                    }
+                    stack.push(char);
+                }
+            }
+
+            while (stack.length) {
+                postfix += stack.pop();
+            }
+
+            document.getElementById('result').innerText = `Postfix Expression: ${postfix}`;
+        }
+    </script>
+</body>
+  </html>
+</index.html>
